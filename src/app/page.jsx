@@ -1,7 +1,18 @@
+"use client"
 /* eslint-disable @next/next/no-img-element */
 import Image from 'next/image'
+import { useEffect, useState } from 'react'
+import Link from 'next/link';
 
 export default function Home() {
+ const [post, setpost] = useState([])
+
+ useEffect(()=>{
+  console.log(process.env.NEXT_PUBLIC_API_URL,"API_URI")
+  fetch(process.env.NEXT_PUBLIC_API_URL+'/post')
+  .then(res=>res.json())
+  .then(res=>setpost(res))
+ },[])
   return (
     <>
     <main className="container mx-auto px-4 py-6">
@@ -15,25 +26,17 @@ export default function Home() {
    <br/>
 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
   
-        <div className="border border-gray-200 p-4">
-          <img className="w-full h-48 object-cover mb-4" src="https://picsum.photos/200" alt="Post Image"/>
-          <h2 className="text-xl font-semibold mb-2">
-          Enjoy the journey</h2>
-          <p className="text-gray-600">
-            Enjoy the journey
-            We make sure our team feels appreciated and valued. 
-            We take the time to stop and acknowledge where we came from so that we don’t miss how impressive the climb is.</p>
-            </div>
-        <div className="border border-gray-200 p-4">
-          <img className="w-full h-48 object-cover mb-4" src="https://picsum.photos/200" alt="Post Image"/>
-          <h2 className="text-xl font-semibold mb-2">Post Title 2</h2>
-          <p className="text-gray-600">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-        </div>
-        <div className="border border-gray-200 p-4">
-          <img className="w-full h-48 object-cover mb-4" src="https://picsum.photos/200" alt="Post Image"/>
-          <h2 className="text-xl font-semibold mb-2">Post Title 3</h2>
-          <p className="text-gray-600">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-        </div> 
+      
+{post.map((post) => (
+  <Link href={"/post/"+post._id}>
+  <div key={post._id} className="border border-gray-200 p-4">
+    <img className="w-full h-48 object-cover mb-4" src={post.image} alt="Post Image" />
+    <h2 className="text-xl font-semibold mb-2">{post.title}</h2>
+    <p className="text-gray-600">{post.short_description}</p>
+  </div>
+  </Link>
+))}
+       
        
     </div>
 </>
